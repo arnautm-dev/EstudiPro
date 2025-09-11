@@ -50,6 +50,12 @@
     select, .btn, .dur-btn{padding:10px 14px;border-radius:10px;border:1px solid rgba(20,20,20,0.06);background:rgba(255,255,255,0.6);cursor:pointer;transition:all .18s}
     select:focus, .btn:focus, .dur-btn:focus{outline:none;transform:translateY(-2px);box-shadow:0 8px 20px rgba(20,25,40,0.06)}
     .dur-btn{min-width:72px;text-align:center}
+    #customMinutes{
+      font-family: inherit
+    }
+    #settingsBtn {
+      min-width:40px;text-align:center;
+    }
 
     /* Timer big */
     .timer-area{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:26px;border-radius:14px;height:320px}
@@ -73,14 +79,18 @@
 
     /* Settings drawer */
     .drawer{position:fixed;right:-420px;top:0;height:100%;width:420px;background:#fff;box-shadow:-20px 0 40px rgba(20,25,40,0.08);transition:right .28s;padding:22px}
-    .drawer.open{right:0}
+    .drawer.open{
+      right:0;
+      border-top-left-radius: 50px;
+      border-bottom-left-radius: 50px;
+    }
 
     /* Small screens */
-    @media (max-width:920px){.main{grid-template-columns:1fr;}.right{order:2}.container{padding:18px}}
+    @media (max-width:1000px){.main{grid-template-columns:1fr;}.right{order:2}.container{padding:18px}};
 
     /* Tiny helpers */
     .row{display:flex;gap:12px;align-items:center}
-    .sp{flex:1}
+    .sp{flex:0}
     .muted-2{color:#999;font-size:.86rem}
 
     /* aesthetic - reduce contrast on timer when active */
@@ -98,17 +108,17 @@
     <div class="main">
       <div class="left">
         <div>
-          <h1>Temporitzador d'estudi</h1>
-          <p class="sub">Minimalista, personalitzable i orientat a mètodes com Pomodoro.</p>
+          <h1>EstudiPro</h1>
+          <p class="sub">Temporitzador d'estudi minimalista i molt senzill d'utilitzar</p>
         </div>
 
         <div class="card">
           <label for="method">Mètode d'estudi</label>
           <select id="method" class="hide-when-active">
-            <option value="pomodoro">Pomodoro (25/5)</option>
-            <option value="custom">Sessió personalitzada</option>
-            <option value="deepwork">Deep Work (mínim 50 min)</option>
-            <option value="focus">Focus Sesh (mínim 15 min)</option>
+            <option value="pomodoro">Pomodoro</option>
+            <option value="perzonalitzat">Sessió personalitzada</option>
+            <option value="deepwork">Deep Work</option>
+            <option value="focus">Focus Sesh</option>
           </select>
 
           <div style="height:12px"></div>
@@ -154,7 +164,6 @@
           <ul style="margin-top:8px;color:#444">
             <li>Pomodoro: mínim recomanat 15 min, tipicament 25/5.</li>
             <li>Deep Work: sessions llargues sense interrupcions.</li>
-            <li>Toca la pantalla per mostrar controls temporalment.</li>
           </ul>
         </div>
       </aside>
@@ -170,7 +179,7 @@
 
     <!-- Drawer de configuració -->
     <aside id="drawer" class="drawer" aria-hidden="true">
-      <h3>Configuració d'estil</h3>
+      <h3>Configuració</h3>
       <div style="margin-top:12px">
         <label>Color blob A</label>
         <input type="color" id="blobA" value="#6b21a8">
@@ -188,8 +197,7 @@
         <select id="fontSel"><option value="Montserrat">Montserrat</option><option value="system">System</option></select>
       </div>
       <div style="margin-top:18px;display:flex;gap:10px">
-        <button id="saveStyle" class="btn">Guarda</button>
-        <button id="resetStyle" class="btn">Reset</button>
+        <button id="saveStyle" class="btn">Aplica configuracions</button>
       </div>
 
       <hr style="margin:18px 0">
@@ -197,7 +205,6 @@
         <strong>Accions</strong>
         <div style="margin-top:10px;display:flex;gap:8px">
           <button id="clearHistory" class="btn">Neteja historial</button>
-          <button id="importStyle" class="btn">Importa estils (JSON)</button>
         </div>
       </div>
     </aside>
@@ -226,7 +233,6 @@
     const bgHex = document.getElementById('bgHex');
     const fontSel = document.getElementById('fontSel');
     const saveStyle = document.getElementById('saveStyle');
-    const resetStyle = document.getElementById('resetStyle');
     const clearHistory = document.getElementById('clearHistory');
 
     // duration buttons
@@ -303,7 +309,6 @@
       applyStyleFromStorage();
       alert('Estil guardat localment');
     });
-    resetStyle.addEventListener('click', ()=>{localStorage.removeItem(LS_STYLE_KEY);applyStyleFromStorage();alert('Reset complet')});
 
     // aplicar estils ja guardats
     applyStyleFromStorage();
