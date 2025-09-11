@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Temporitzador d'Estudi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js"></script>
+</head>
+<body>
+  <div class="background">
+    <canvas id="blobCanvas"></canvas>
+  </div>
+
+  <div class="app" id="app">
+    <h1>Temporitzador d'Estudi</h1>
+
+    <div class="controls" id="controls">
+      <label for="methodSelect">Mètode:</label>
+      <select id="methodSelect">
+        <option value="pomodoro">Pomodoro (25/5)</option>
+        <option value="deep">Deep Work (50/10)</option>
+        <option value="focus">Focus (45/15)</option>
+        <option value="custom">Personalitzat</option>
+      </select>
+
+      <div class="durations">
+        <button data-time="15">15 min</button>
+        <button data-time="25">25 min</button>
+        <button data-time="50">50 min</button>
+        <button data-time="90">90 min</button>
+        <input type="number" id="customMinutes" placeholder="Minuts" min="1">
+      </div>
+
+      <button id="startBtn">Inicia</button>
+    </div>
+
+    <div class="timer hidden" id="timer">00:00</div>
+    <button class="hidden" id="stopBtn">Atura</button>
+
+    <div class="history" id="history">
+      <h2>Historial</h2>
+      <ul id="historyList"></ul>
+      <button id="exportCsv">Exporta CSV</button>
+      <button id="clearHistory">Neteja historial</button>
+    </div>
+
+    <button id="settingsBtn">⚙️ Configuració</button>
+    <div class="settings-panel hidden" id="settingsPanel">
+      <h2>Configuració</h2>
+      <label>Color de fons: <input type="color" id="bgColor"></label>
+      <label>Color del temporitzador: <input type="color" id="timerColor"></label>
+      <button id="saveSettings">Desa</button>
+      <button id="resetSettings">Reset</button>
+      <button id="exportSettings">Exporta estils (JSON)</button>
+      <button id="importSettings">Importa estils (JSON)</button>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

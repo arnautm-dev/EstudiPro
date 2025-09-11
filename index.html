@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EstudiPro</title>
+
+  <!-- Fonts i Llibreries (CDN) -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/dayjs@1.11.9/dayjs.min.js"></script>
+  <script src="https://unpkg.com/dayjs@1.11.9/plugin/relativeTime.js"></script>
+  <script>dayjs.extend(dayjs_plugin_relativeTime)</script>
+  <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+
+  <style>
+    /* == RESET bàsic == */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body,#app{height:100%}
+    body{
+      font-family: 'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background: linear-gradient(180deg,#fafafa 0%, #f5f7fb 100%);
+      color:#222;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      display:flex;align-items:center;justify-content:center;padding:32px
+    }
+
+    /* == Layout principal == */
+    .container{width:100%;max-width:980px;background:rgba(255,255,255,0.8);border-radius:20px;box-shadow:0 8px 30px rgba(20,25,40,0.08);overflow:hidden;position:relative}
+    .main{display:grid;grid-template-columns:1fr 360px;gap:28px;padding:36px}
+
+    /* == Left: controls + timer area == */
+    .left{display:flex;flex-direction:column;gap:18px}
+    h1{font-weight:800;font-size:1.6rem;color:#111}
+    .sub{color:#666;font-size:0.95rem}
+
+    /* Card */
+    .card{background:rgba(255,255,255,0.6);border-radius:14px;padding:18px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.6)}
+
+    /* Gradient floating blobs (minimal, isolated) */
+    .bg-blobs{position:absolute;inset:0;pointer-events:none}
+    .blob{position:absolute;width:320px;height:320px;border-radius:50%;filter:blur(60px);opacity:0.12;mix-blend-mode:screen}
+    .blob--a{background: radial-gradient(circle at 30% 30%, #6b21a8, #3b0066);left:-80px;top:-60px}
+    .blob--b{background: radial-gradient(circle at 70% 70%, #7c3aed, #a78bfa);right:-80px;bottom:-120px}
+
+    /* Controls */
+    label{display:block;font-size:0.85rem;color:#555;margin-bottom:8px}
+    select,button{font-family:inherit}
+    .controls{display:flex;gap:12px;flex-wrap:wrap}
+    select, .btn, .dur-btn{padding:10px 14px;border-radius:10px;border:1px solid rgba(20,20,20,0.06);background:rgba(255,255,255,0.6);cursor:pointer;transition:all .18s}
+    select:focus, .btn:focus, .dur-btn:focus{outline:none;transform:translateY(-2px);box-shadow:0 8px 20px rgba(20,25,40,0.06)}
+    .dur-btn{min-width:72px;text-align:center}
+    #customMinutes {
+      font-family: Montserrat, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    /* Timer big */
+    .timer-area{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:26px;border-radius:14px;height:320px}
+    .timer-display{font-weight:800;font-size:4.6rem;letter-spacing: -0.02em;color:#111;transition:all .3s}
+    .timer-label{margin-top:8px;color:#666}
+
+    /* Right column: history + settings button */
+    .right{padding:18px;display:flex;flex-direction:column;gap:16px}
+    .history-list{max-height:420px;overflow:auto;padding-right:6px}
+    .history-item{padding:10px;border-radius:8px;border:1px solid rgba(20,20,20,0.03);display:flex;justify-content:space-between;gap:8px;margin-bottom:8px}
+    .muted{color:#8b8b8b;font-size:0.85rem}
+
+    /* Fullscreen overlay (simulate dimming, battery saver, no molestar) */
+    .overlay{position:fixed;inset:0;background:linear-gradient(180deg, rgb(0, 0, 0), rgb(12, 0, 15));opacity:0;pointer-events:none;transition:opacity .25s}
+    .overlay.active{opacity:1;pointer-events:auto}
+    .overlay .reveal{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;color:white}
+
+    /* Hidden state when timer active */
+    .hide-when-active{transition:opacity .15s,transform .15s}
+    .app-active .hide-when-active{opacity:0;transform:scale(.98);pointer-events:none}
+
+    /* Settings drawer */
+    .drawer{position:fixed;right:-420px;top:0;height:100%;width:420px;background:#fff;box-shadow:-20px 0 40px rgba(20,25,40,0.08);transition:right .28s;padding:22px}
+    .drawer.open{right:0}
+
+    /* Small screens */
+    @media (max-width:920px){.main{grid-template-columns:1fr;}.right{order:2}.container{padding:18px}}
+
+    /* Tiny helpers */
+    .row{display:flex;gap:12px;align-items:center}
+    .sp{flex:1}
+    .muted-2{color:#999;font-size:.86rem}
+
+    /* aesthetic - reduce contrast on timer when active */
+    .timer-minimal{color:rgba(255,255,255,0.95);text-shadow:0 6px 20px rgba(0,0,0,0.25)}
+
+  </style>
+</head>
+<body>
+  <div id="app" class="container" role="application">
+    <div class="bg-blobs" aria-hidden="true">
+      <div class="blob blob--a"></div>
+      <div class="blob blob--b"></div>
+    </div>
+
+    <div class="main">
+      <div class="left">
+        <div>
+          <h1>Temporitzador d'estudi</h1>
+          <p class="sub">Minimalista, personalitzable i orientat a mètodes com Pomodoro.</p>
+        </div>
+
+        <div class="card">
+          <label for="method">Mètode d'estudi</label>
+          <select id="method" class="hide-when-active">
+            <option value="pomodoro">Pomodoro (25/5)</option>
+            <option value="custom">Sessió personalitzada</option>
+            <option value="deepwork">Deep Work (mínim 50 min)</option>
+            <option value="focus">Focus Sesh (mínim 15 min)</option>
+          </select>
+
+          <div style="height:12px"></div>
+
+          <label>Duració mínima</label>
+          <div class="controls">
+            <button class="dur-btn hide-when-active" data-min="15">15m</button>
+            <button class="dur-btn hide-when-active" data-min="25">25m</button>
+            <button class="dur-btn hide-when-active" data-min="50">50m</button>
+            <button class="dur-btn hide-when-active" data-min="90">90m</button>
+            <input id="customMinutes" class="hide-when-active" type="number" min="1" placeholder="min" style="width:100px;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.06)">
+          </div>
+
+          <div style="height:14px"></div>
+          <div class="row">
+            <button id="startBtn" class="btn">Iniciar</button>
+            <button id="stopBtn" class="btn" style="display:none">Aturar</button>
+            <div class="sp"></div>
+            <button id="settingsBtn" class="btn">⚙</button>
+          </div>
+        </div>
+
+        <div class="card timer-area" id="timerCard">
+          <div id="timerDisplay" class="timer-display">00:00</div>
+          <div id="timerLabel" class="timer-label">Sense sessió</div>
+        </div>
+
+      </div>
+
+      <aside class="right">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <strong>Historial d'estudi</strong>
+            <div>
+              <button id="exportCsv" class="btn">Exporta CSV</button>
+            </div>
+          </div>
+          <div class="history-list" id="historyList" aria-live="polite"></div>
+        </div>
+
+        <div class="card">
+          <div class="muted-2">Consells</div>
+          <ul style="margin-top:8px;color:#444">
+            <li>Pomodoro: mínim recomanat 15 min, tipicament 25/5.</li>
+            <li>Deep Work: sessions llargues sense interrupcions.</li>
+            <li>Toca la pantalla per mostrar controls temporalment.</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+
+    <!-- overlay que s'activa quan el temporitzador està en marxa per simular "dimming" i mode no molestar -->
+    <div id="overlay" class="overlay" tabindex="-1">
+      <div class="reveal">
+        <div id="overlayTimer" style="font-weight:800;font-size:4.2rem"></div>
+        <div style="margin-top:10px;opacity:.9">Toca la pantalla per mostrar controls</div>
+      </div>
+    </div>
+
+    <!-- Drawer de configuració -->
+    <aside id="drawer" class="drawer" aria-hidden="true">
+      <h3>Configuració d'estil</h3>
+      <div style="margin-top:12px">
+        <label>Color blob A</label>
+        <input type="color" id="blobA" value="#6b21a8">
+      </div>
+      <div style="margin-top:12px">
+        <label>Color blob B</label>
+        <input type="color" id="blobB" value="#7c3aed">
+      </div>
+      <div style="margin-top:12px">
+        <label>Fons (hex)</label>
+        <input type="text" id="bgHex" value="#fafafa">
+      </div>
+      <div style="margin-top:14px">
+        <label>Tipus de font</label>
+        <select id="fontSel"><option value="Montserrat">Montserrat</option><option value="system">System</option></select>
+      </div>
+      <div style="margin-top:18px;display:flex;gap:10px">
+        <button id="saveStyle" class="btn">Guarda</button>
+        <button id="resetStyle" class="btn">Reset</button>
+      </div>
+
+      <hr style="margin:18px 0">
+      <div>
+        <strong>Accions</strong>
+        <div style="margin-top:10px;display:flex;gap:8px">
+          <button id="clearHistory" class="btn">Neteja historial</button>
+          <button id="importStyle" class="btn">Importa estils (JSON)</button>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <script>
+    // ========== UTIL / ESTAT GLOBAL ===========
+    const app = document.getElementById('app');
+    const overlay = document.getElementById('overlay');
+    const overlayTimer = document.getElementById('overlayTimer');
+    const timerDisplay = document.getElementById('timerDisplay');
+    const timerLabel = document.getElementById('timerLabel');
+    const methodSel = document.getElementById('method');
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const settingsBtn = document.getElementById('settingsBtn');
+    const drawer = document.getElementById('drawer');
+
+    const historyList = document.getElementById('historyList');
+    const exportCsv = document.getElementById('exportCsv');
+
+    // style controls
+    const blobA = document.getElementById('blobA');
+    const blobB = document.getElementById('blobB');
+    const bgHex = document.getElementById('bgHex');
+    const fontSel = document.getElementById('fontSel');
+    const saveStyle = document.getElementById('saveStyle');
+    const resetStyle = document.getElementById('resetStyle');
+    const clearHistory = document.getElementById('clearHistory');
+
+    // duration buttons
+    const durBtns = document.querySelectorAll('.dur-btn');
+    const customMinutes = document.getElementById('customMinutes');
+
+    // overlay click to reveal controls
+    overlay.addEventListener('click', ()=>{
+      showControlsTemporarily();
+    });
+
+    // Estado del temporitzador
+    let timerState = {
+      running:false,
+      startTs:null,
+      durationSec:0,
+      elapsedSec:0,
+      method:null,
+      overtime:false,
+      wakeLock:null,
+      visibilityLost:false
+    };
+
+    // Historial en localStorage
+    const LS_HISTORY_KEY = 'estudi_history_v1';
+    const LS_STYLE_KEY = 'estudi_style_v1';
+
+    function loadHistory(){
+      try{
+        const h = JSON.parse(localStorage.getItem(LS_HISTORY_KEY) || '[]');
+        return Array.isArray(h)?h:[];
+      }catch(e){return []}
+    }
+    function saveHistory(arr){localStorage.setItem(LS_HISTORY_KEY, JSON.stringify(arr))}
+
+    function renderHistory(){
+      const data = loadHistory().slice().reverse();
+      historyList.innerHTML = '';
+      if(!data.length){historyList.innerHTML='<div class="muted">Sense registres</div>';return}
+      data.forEach(item=>{
+        const el = document.createElement('div');el.className='history-item';
+        el.innerHTML = `<div>
+          <div style="font-weight:700">${item.method}</div>
+          <div class="muted">${dayjs(item.start).format('YYYY-MM-DD HH:mm')}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-weight:700">${formatMinutes(item.duration)}</div>
+          <div class="muted">${item.leftApp? 'Sortida durant sessió':'Sessió continua'}</div>
+        </div>`
+        historyList.appendChild(el);
+      })
+    }
+
+    function formatMinutes(sec){
+      if(!sec) return '0m';
+      const m = Math.floor(sec/60);
+      const h = Math.floor(m/60);
+      const rem = m%60;
+      return h? `${h}h ${rem}m` : `${rem}m`;
+    }
+
+    // ================== CONFIG ESTILS ==================
+    function applyStyleFromStorage(){
+      const s = JSON.parse(localStorage.getItem(LS_STYLE_KEY) || '{}');
+      if(s.blobA) document.querySelector('.blob--a').style.background = `radial-gradient(circle at 30% 30%, ${s.blobA}, #3b0066)`;
+      if(s.blobB) document.querySelector('.blob--b').style.background = `radial-gradient(circle at 70% 70%, ${s.blobB}, #a78bfa)`;
+      if(s.bg) document.body.style.background = `linear-gradient(180deg, ${s.bg} 0%, #f5f7fb 100%)`;
+      if(s.font && s.font!=='Montserrat') document.body.style.fontFamily = 'system-ui, -apple-system, Segoe UI, Roboto';
+      if(s.blobA) blobA.value = s.blobA; if(s.blobB) blobB.value = s.blobB; if(s.bg) bgHex.value = s.bg;
+    }
+    saveStyle.addEventListener('click', ()=>{
+      const o = {blobA:blobA.value, blobB:blobB.value, bg:bgHex.value, font:fontSel.value};
+      localStorage.setItem(LS_STYLE_KEY, JSON.stringify(o));
+      applyStyleFromStorage();
+      alert('Estil guardat localment');
+    });
+    resetStyle.addEventListener('click', ()=>{localStorage.removeItem(LS_STYLE_KEY);applyStyleFromStorage();alert('Reset complet')});
+
+    // aplicar estils ja guardats
+    applyStyleFromStorage();
+
+    // ================== DURACIONS / MÈTODES ==================
+    function enforceMethodConstraints(method, minutes){
+      minutes = Number(minutes);
+      if(method==='pomodoro'){ if(minutes < 15) return 15 }
+      if(method==='deepwork'){ if(minutes < 50) return 50 }
+      if(method==='focus'){ if(minutes < 15) return 15 }
+      if(minutes==='custom'||!method) return Math.max(1, minutes);
+      return minutes;
+    }
+
+    // seleccionar duracions ràpides
+    durBtns.forEach(b=>b.addEventListener('click', ()=>{
+      const mins = Number(b.dataset.min || 25);
+      customMinutes.value = mins;
+    }));
+
+    // Start/Stop
+    startBtn.addEventListener('click', ()=>{
+      const method = methodSel.value;
+      let minutes = Number(customMinutes.value) || 25;
+      minutes = enforceMethodConstraints(method, minutes);
+      startSession(method, minutes*60);
+    });
+
+    stopBtn.addEventListener('click', ()=>{ stopSession(true); });
+
+    // settings drawer toggle
+    settingsBtn.addEventListener('click', ()=>{ drawer.classList.toggle('open'); drawer.setAttribute('aria-hidden', String(!drawer.classList.contains('open'))) });
+
+    // Clear history
+    clearHistory.addEventListener('click', ()=>{ if(confirm('Netejar historial?')){ localStorage.removeItem(LS_HISTORY_KEY); renderHistory(); } });
+
+    exportCsv.addEventListener('click', ()=>{
+      const arr = loadHistory();
+      if(!arr.length){ alert('Sense dades per exportar');return }
+      let csv = 'method,start,duration_sec,left_app\n';
+      arr.forEach(r=> csv += `${r.method},${r.start},${r.duration},${r.leftApp}\n`);
+      const blob = new Blob([csv],{type:'text/csv'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'historial_estudi.csv'; a.click(); URL.revokeObjectURL(url);
+    });
+
+    // ========== TIMER LOGIC ============
+    let tickInterval = null;
+    function startSession(method, durationSec){
+      if(timerState.running) return;
+      timerState.running = true; timerState.startTs = Date.now(); timerState.durationSec = durationSec; timerState.elapsedSec = 0; timerState.method = method; timerState.overtime=false; timerState.visibilityLost=false;
+      // UI changes
+      app.classList.add('app-active'); overlay.classList.add('active');
+      startBtn.style.display='none'; stopBtn.style.display='inline-block';
+      timerLabel.textContent = method || 'Sessió';
+
+      // try to request Wake Lock (if suportat)
+      requestWakeLock();
+
+      // fullscreen for focus
+      if(document.fullscreenEnabled){ document.documentElement.requestFullscreen().catch(()=>{}); }
+
+      // start ticking
+      tickInterval = setInterval(()=>{
+        timerState.elapsedSec = Math.floor((Date.now() - timerState.startTs)/1000);
+        updateTimerUI();
+      }, 250);
+
+      // add visibility listener to detect leaving
+      document.addEventListener('visibilitychange', onVisibilityChange);
+
+      // record provisional event in history (closed later on stop)
+      const hist = loadHistory();
+      hist.push({method:method,start:new Date().toISOString(),duration:0,leftApp:false});
+      saveHistory(hist);
+      renderHistory();
+    }
+
+    function updateTimerUI(){
+      const secs = timerState.elapsedSec;
+      const remaining = timerState.durationSec - secs;
+      if(remaining < 0) timerState.overtime = true;
+      const disp = Math.abs(remaining);
+      const mm = Math.floor(disp/60); const ss = disp%60;
+      const text = `${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;
+      if(timerState.overtime) timerDisplay.textContent = `+${text}`; else timerDisplay.textContent = text;
+      overlayTimer.textContent = timerDisplay.textContent;
+    }
+
+    async function stopSession(manual){
+      if(!timerState.running) return;
+      timerState.running = false;
+      clearInterval(tickInterval); tickInterval = null;
+      releaseWakeLock();
+      try{ if(document.fullscreenElement) await document.exitFullscreen(); }catch(e){}
+
+      // mark last history entry with duration and whether left app
+      const hist = loadHistory();
+      if(hist.length){
+        const last = hist[hist.length-1];
+        last.duration = timerState.elapsedSec;
+        last.leftApp = timerState.visibilityLost;
+        saveHistory(hist);
+      }
+
+      // UI restore
+      app.classList.remove('app-active'); overlay.classList.remove('active');
+      startBtn.style.display='inline-block'; stopBtn.style.display='none';
+      timerLabel.textContent = 'Sense sessió';
+      renderHistory();
+    }
+
+    // detect visibility change (user left tab/app)
+    function onVisibilityChange(){
+      if(document.visibilityState === 'hidden'){
+        // marqueu l'historial que s'ha sortit
+        timerState.visibilityLost = true;
+      }
+    }
+
+    // show controls temporarily (when overlay clicked)
+    let revealTimeout = null;
+    function showControlsTemporarily(){
+      app.classList.remove('app-active'); // show controls
+      overlay.classList.remove('active');
+      // set stop button to visible so user can stop
+      startBtn.style.display='none'; stopBtn.style.display='inline-block';
+      clearTimeout(revealTimeout);
+      revealTimeout = setTimeout(()=>{
+        if(timerState.running){ app.classList.add('app-active'); overlay.classList.add('active'); }
+      }, 5000);
+    }
+
+    // ========== Wake Lock helpers (only visual; browser API where possible) ===========
+    async function requestWakeLock(){
+      try{
+        if('wakeLock' in navigator){
+          timerState.wakeLock = await navigator.wakeLock.request('screen');
+          timerState.wakeLock.addEventListener('release', ()=>{ timerState.wakeLock=null });
+        }
+      }catch(e){ console.warn('WakeLock error',e); }
+    }
+    function releaseWakeLock(){ if(timerState.wakeLock){ try{ timerState.wakeLock.release(); timerState.wakeLock=null }catch(e){} }}
+
+    // detect page unload to update history if closing while running
+    window.addEventListener('beforeunload', ()=>{
+      if(timerState.running){
+        const hist = loadHistory();
+        if(hist.length){ const last = hist[hist.length-1]; last.duration = timerState.elapsedSec; last.leftApp = true; saveHistory(hist); }
+      }
+    });
+
+    // save history periodically
+    setInterval(()=>{ if(timerState.running){ const hist = loadHistory(); if(hist.length){ hist[hist.length-1].duration = timerState.elapsedSec; hist[hist.length-1].leftApp = timerState.visibilityLost; saveHistory(hist); } } }, 2000);
+
+    // detect tap on overlay to reveal controls
+    overlay.addEventListener('touchstart', ()=> showControlsTemporarily());
+
+    // keyboard: space to start/stop
+    window.addEventListener('keydown', (e)=>{ if(e.code==='Space'){ e.preventDefault(); if(timerState.running) stopSession(true); else startBtn.click(); } });
+
+    // render initial history
+    renderHistory();
+
+    // ========== Accessibility + small extras ==========
+    // Toggle drawer by pressing 'D'
+    window.addEventListener('keydown', (e)=>{ if(e.key==='d' || e.key==='D'){ drawer.classList.toggle('open'); } });
+
+    // make overlay update time while active even if paused
+    setInterval(()=>{ if(timerState.running) updateTimerUI(); }, 500);
+
+    // small animation for blobs
+    gsap.to('.blob--a', {duration:10, x:40, y:20, repeat:-1, yoyo:true, ease:'sine.inOut'});
+    gsap.to('.blob--b', {duration:12, x:-40, y:-20, repeat:-1, yoyo:true, ease:'sine.inOut'});
+
+    // Accessibility: focus outlines
+    document.querySelectorAll('button,select,input').forEach(el=>el.addEventListener('focus', ()=>el.style.boxShadow='0 10px 30px rgba(80,100,200,0.06)'));
+
+    // On load: apply any style from storage
+    applyStyleFromStorage();
+
+    // Small helper: update timer display initially
+    timerDisplay.textContent='00:00';
+
+  </script>
+
+  <!-- == NOTES i instrccions per modificar ==
+    - El fitxer és complet en un sol HTML. Pots canviar les opcions a l'<select> per afegir més mètodes.
+    - Si vols activar notificacions al final d'una sessió, afegeix l'API Notifications (demana permís i mostra una notificació quan s'acabi el temporitzador).
+    - Si vols que el temporitzador només faci vibrar al final: navigator.vibrate([200,100,200])
+    - Per empaquetar Montserrat al ZIP, substitueix la línia Google Fonts per <style>@font-face...</style> apuntant al TTF/OTF local.
+    - Limitacions: no es pot forçar el mode No Molestar del SO ni canviar la brillantor real del dispositiu.
+  -->
+
+</body>
+</html>
