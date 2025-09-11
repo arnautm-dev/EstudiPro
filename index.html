@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>EstudiPro</title>
+  <title>Temporitzador d'estudi - ArnauTM</title>
 
   <!-- Fonts i Llibreries (CDN) -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -50,9 +50,6 @@
     select, .btn, .dur-btn{padding:10px 14px;border-radius:10px;border:1px solid rgba(20,20,20,0.06);background:rgba(255,255,255,0.6);cursor:pointer;transition:all .18s}
     select:focus, .btn:focus, .dur-btn:focus{outline:none;transform:translateY(-2px);box-shadow:0 8px 20px rgba(20,25,40,0.06)}
     .dur-btn{min-width:72px;text-align:center}
-    #customMinutes {
-      font-family: Montserrat, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    }
 
     /* Timer big */
     .timer-area{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:26px;border-radius:14px;height:320px}
@@ -66,7 +63,7 @@
     .muted{color:#8b8b8b;font-size:0.85rem}
 
     /* Fullscreen overlay (simulate dimming, battery saver, no molestar) */
-    .overlay{position:fixed;inset:0;background:linear-gradient(180deg, rgb(0, 0, 0), rgb(12, 0, 15));opacity:0;pointer-events:none;transition:opacity .25s}
+    .overlay{position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;transition:opacity .25s}
     .overlay.active{opacity:1;pointer-events:auto}
     .overlay .reveal{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;color:white}
 
