@@ -141,9 +141,21 @@ select:focus, .btn:focus, .dur-btn:focus {
     align-items: center;
     justify-content: center;
     padding: 26px;
+    padding-top: 50px;
+    padding-bottom: 50px;
     border-radius: 14px;
-    height: 320px;
+    max-height: fit-content;
+    min-height: 300px;
 }
+
+
+
+
+
+
+
+
+
 .timer-display {
     font-weight: 800;
     font-size: 4.6rem;
@@ -236,7 +248,7 @@ select:focus, .btn:focus, .dur-btn:focus {
 /* Small screens */
 @media (max-width:1000px) {
     .main { grid-template-columns: 1fr; }
-    .right { order: 2; }
+    .right { display: none; }
     .container { padding: 18px; }
 }
 

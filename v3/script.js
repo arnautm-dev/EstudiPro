@@ -1,4 +1,5 @@
 // ========== UTIL / ESTAT GLOBAL ===========
+
 const app = document.getElementById('app');
 const overlay = document.getElementById('overlay');
 const overlayTimer = document.getElementById('overlayTimer');
@@ -14,7 +15,8 @@ const drawer = document.getElementById('drawer');
 const historyList = document.getElementById('historyList');
 const exportCsv = document.getElementById('exportCsv');
 
-const bgColor = document.getElementById('bgColor');
+const bgColor1 = document.getElementById('bgColor1');
+const bgColor2 = document.getElementById('bgColor2');
 const fontSel = document.getElementById('fontSel');
 const saveStyle = document.getElementById('saveStyle');
 const clearHistory = document.getElementById('clearHistory');
@@ -51,6 +53,7 @@ function loadHistory() {
         return [];
     }
 }
+
 function saveHistory(arr) {
     localStorage.setItem(LS_HISTORY_KEY, JSON.stringify(arr));
 }
@@ -94,9 +97,17 @@ function escapeHtml(str) {
 // ================== CONFIG ESTILS ==================
 function applyStyleFromStorage() {
     const s = JSON.parse(localStorage.getItem(LS_STYLE_KEY) || '{}');
-    if (s.bg) {
-        document.documentElement.style.setProperty('--bg-start', s.bg);
+
+    if (s.bg1) {
+        document.documentElement.style.setProperty('--bg-start', s.bg1);
+        bgColor1.value = s.bg1;
     }
+
+    if (s.bg2) {
+        document.documentElement.style.setProperty('--bg-end', s.bg2);
+        bgColor2.value = s.bg2;
+    }
+
     if (s.font) {
         if (s.font === 'Montserrat') {
             document.body.style.fontFamily = "'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial";
@@ -107,51 +118,51 @@ function applyStyleFromStorage() {
         } else {
             document.body.style.fontFamily = "system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial";
         }
+        fontSel.value = s.font;
     }
-    // update UI inputs if exist
-    if (s.bg) bgColor.value = s.bg;
-    if (s.font) fontSel.value = s.font;
 }
 
+// aplicar estils ja guardats
+applyStyleFromStorage();
+
 saveStyle.addEventListener('click', () => {
-    const o = { bg: bgColor.value, font: fontSel.value };
+    const o = { bg1: bgColor1.value, bg2: bgColor2.value, font: fontSel.value };
     localStorage.setItem(LS_STYLE_KEY, JSON.stringify(o));
     applyStyleFromStorage();
     alert('Estil guardat localment');
 });
 
-// aplicar estils ja guardats
-applyStyleFromStorage();
+// helper: update CSS var when bg1 color changes
+bgColor1.addEventListener('input', (e) => {
+    document.documentElement.style.setProperty('--bg-start', e.target.value);
+});
+
+// helper: update CSS var when bg2 color changes
+bgColor2.addEventListener('input', (e) => {
+    document.documentElement.style.setProperty('--bg-end', e.target.value);
+});
 
 // ================== DURACIONS / MÈTODES ==================
-// seleccionar duracions ràpides
 durBtns.forEach(b => b.addEventListener('click', () => {
     const mins = Number(b.dataset.min || 25);
     customMinutes.value = mins;
 }));
 
-// Start/Stop behavior:
-// - Prioritza el valor de l'input customMinutes (si buit -> 0 minuts)
-// - L'input methodInput és de text i s'emmagatzema a l'historial com a methodText
 startBtn.addEventListener('click', () => {
     const methodText = methodInput.value.trim();
-    // If input is empty, duration = 0 (start from 0)
     const hasCustom = String(customMinutes.value).trim() !== '';
     let minutes = hasCustom ? Math.max(0, Number(customMinutes.value) || 0) : 0;
-    // convert to seconds
     const durationSec = Math.max(0, Math.floor(minutes * 60));
     startSession(methodText || 'Sessió', durationSec);
 });
 
 stopBtn.addEventListener('click', () => { stopSession(true); });
 
-// settings drawer toggle
 settingsBtn.addEventListener('click', () => {
     drawer.classList.toggle('open');
     drawer.setAttribute('aria-hidden', String(!drawer.classList.contains('open')));
 });
 
-// close drawer when clicking outside (and not clicking the settings button)
 document.addEventListener('click', (e) => {
     if (!drawer.classList.contains('open')) return;
     const path = e.composedPath ? e.composedPath() : (e.path || []);
@@ -163,7 +174,6 @@ document.addEventListener('click', (e) => {
     }
 });
 
-// Clear history
 clearHistory.addEventListener('click', () => {
     if (confirm('Netejar historial?')) {
         localStorage.removeItem(LS_HISTORY_KEY);
@@ -193,29 +203,23 @@ function startSession(methodText, durationSec) {
     timerState.overtime = false;
     timerState.visibilityLost = false;
 
-    // UI changes
     app.classList.add('app-active');
     overlay.classList.add('active');
     startBtn.style.display = 'none';
     stopBtn.style.display = 'inline-block';
     timerLabel.textContent = methodText || 'Sessió';
 
-    // try to request Wake Lock (si està suportat)
     requestWakeLock();
 
-    // fullscreen per focus
     if (document.fullscreenEnabled) { document.documentElement.requestFullscreen().catch(() => { }); }
 
-    // start ticking
     tickInterval = setInterval(() => {
         timerState.elapsedSec = Math.floor((Date.now() - timerState.startTs) / 1000);
         updateTimerUI();
     }, 250);
 
-    // add visibility listener to detectar sortides
     document.addEventListener('visibilitychange', onVisibilityChange);
 
-    // record provisional event in history (s'actualitza a stop)
     const hist = loadHistory();
     hist.push({ methodText: methodText, start: new Date().toISOString(), duration: 0, leftApp: false });
     saveHistory(hist);
@@ -229,7 +233,7 @@ function updateTimerUI() {
     const disp = Math.abs(remaining);
     const mm = Math.floor(disp / 60); const ss = disp % 60;
     const text = `${String(mm).padStart(2, '0')}:${String(ss).padStart(2, '0')}`;
-    if (timerState.overtime) timerDisplay.textContent = `+${text}`; else timerDisplay.textContent = text;
+    timerDisplay.textContent = timerState.overtime ? `+${text}` : text;
     overlayTimer.textContent = timerDisplay.textContent;
 }
 
@@ -240,7 +244,6 @@ async function stopSession(manual) {
     releaseWakeLock();
     try { if (document.fullscreenElement) await document.exitFullscreen(); } catch (e) { }
 
-    // mark last history entry with duration and whether left app
     const hist = loadHistory();
     if (hist.length) {
         const last = hist[hist.length - 1];
@@ -249,24 +252,21 @@ async function stopSession(manual) {
         saveHistory(hist);
     }
 
-    // UI restore
     app.classList.remove('app-active'); overlay.classList.remove('active');
     startBtn.style.display = 'inline-block'; stopBtn.style.display = 'none';
     timerLabel.textContent = 'Sense sessió';
     renderHistory();
 }
 
-// detect visibility change (user left tab/app)
 function onVisibilityChange() {
     if (document.visibilityState === 'hidden') {
         timerState.visibilityLost = true;
     }
 }
 
-// show controls temporarily (when overlay clicked)
 let revealTimeout = null;
 function showControlsTemporarily() {
-    app.classList.remove('app-active'); // show controls
+    app.classList.remove('app-active');
     overlay.classList.remove('active');
     startBtn.style.display = 'none'; stopBtn.style.display = 'inline-block';
     clearTimeout(revealTimeout);
@@ -286,7 +286,6 @@ async function requestWakeLock() {
 }
 function releaseWakeLock() { if (timerState.wakeLock) { try { timerState.wakeLock.release(); timerState.wakeLock = null; } catch (e) { } } }
 
-// detect page unload to update history if closing while running
 window.addEventListener('beforeunload', () => {
     if (timerState.running) {
         const hist = loadHistory();
@@ -299,7 +298,6 @@ window.addEventListener('beforeunload', () => {
     }
 });
 
-// save history periodically
 setInterval(() => {
     if (timerState.running) {
         const hist = loadHistory();
@@ -311,34 +309,12 @@ setInterval(() => {
     }
 }, 2000);
 
-// detect tap on overlay to reveal controls
 overlay.addEventListener('touchstart', () => showControlsTemporarily());
 
-// keyboard: space to start/stop
-window.addEventListener('keydown', (e) => {
-    if (e.code === 'Space') { e.preventDefault(); if (timerState.running) stopSession(true); else startBtn.click(); }
-});
-
-// render initial history
 renderHistory();
-
-// ========== Extras ==========
-window.addEventListener('keydown', (e) => { if (e.key === 'd' || e.key === 'D') { drawer.classList.toggle('open'); } });
-
-// make overlay update time while active even if paused
 setInterval(() => { if (timerState.running) updateTimerUI(); }, 500);
 
-// small animation for blobs
 gsap.to('.blob--a', { duration: 10, x: 40, y: 20, repeat: -1, yoyo: true, ease: 'sine.inOut' });
 gsap.to('.blob--b', { duration: 12, x: -40, y: -20, repeat: -1, yoyo: true, ease: 'sine.inOut' });
 
-// On load: apply any style from storage
-applyStyleFromStorage();
-
-// helper: update CSS var when bg color changes
-bgColor.addEventListener('input', (e) => {
-    document.documentElement.style.setProperty('--bg-start', e.target.value);
-});
-
-// ensure timer display initial
 timerDisplay.textContent = '00:00';
