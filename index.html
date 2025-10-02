@@ -1,5 +1,5 @@
-<!doctype html>
-<html lang="ca">
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -17,114 +17,18 @@
     <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
 
     <!-- Estils separats -->
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style-advice.css">
 </head>
 <body>
-    <div id="app" class="container" role="application">
-        <div class="bg-blobs" aria-hidden="true">
-            <div class="blob blob--a"></div>
-            <div class="blob blob--b"></div>
-        </div>
-
-        <div class="main">
-            <div class="left">
-                <div>
-                    <h1>EstudiPro</h1>
-                    <p class="sub">Temporitzador d'estudi minimalista i molt senzill d'utilitzar</p>
-                </div>
-
-                <div class="card">
-                    <label for="methodInput">Què estudies?</label>
-                    <input id="methodInput" class="hide-when-active" type="text" placeholder="Ex: examen mates, deures història, etc." style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.06)">
-
-                    <div style="height:12px"></div>
-
-                    <label>Duració de la sessió</label>
-                    <div class="controls">
-                        <button class="dur-btn hide-when-active" data-min="15">15m</button>
-                        <button class="dur-btn hide-when-active" data-min="25">25m</button>
-                        <button class="dur-btn hide-when-active" data-min="50">50m</button>
-                        <button class="dur-btn hide-when-active" data-min="90">90m</button>
-                        <input id="customMinutes" class="hide-when-active" type="number" min="0" placeholder="min" style="width:100px;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.06)">
-                    </div>
-
-                    <div style="height:14px"></div>
-                    <div class="row">
-                        <button id="startBtn" class="btn">Iniciar</button>
-                        <button id="stopBtn" class="btn" style="display:none">Aturar</button>
-                        <div class="sp"></div>
-                        <button id="settingsBtn" class="btn">⚙</button>
-                    </div>
-                </div>
-
-                <div class="card timer-area" id="timerCard">
-                    <div id="timerDisplay" class="timer-display">00:00</div>
-                    <div id="timerLabel" class="timer-label">Sense sessió</div>
-                </div>
-
-            </div>
-
-            <aside class="right">
-                <div class="card">
-                    <div style="display:flex;justify-content:space-between;align-items:center">
-                        <strong>Historial d'estudi</strong>
-                        <div>
-                            <button id="exportCsv" class="btn">Exporta CSV</button>
-                        </div>
-                    </div>
-                    <div class="history-list" id="historyList" aria-live="polite"></div>
-                </div>
-
-                <div class="card">
-                    <div class="muted-2">Consells</div>
-                    <ul style="margin-top:8px;color:#444">
-                        <li>Pomodoro: mínim recomanat 15 min, tipicament 10/5.</li>
-                        <li>Recorda: la música no és bona per a concentrar-se.</li>
-                    </ul>
-                </div>
-            </aside>
-        </div>
-
-        <div id="overlay" class="overlay" tabindex="-1">
-            <div class="reveal">
-                <div id="overlayTimer" style="font-weight:800;font-size:4.2rem"></div>
-                <div style="margin-top:10px;opacity:.9">Toca la pantalla per mostrar controls</div>
-            </div>
-        </div>
-
-        <aside id="drawer" class="drawer" aria-hidden="true">
-            <h3>Configuració</h3>
-
-            <!-- Eliminats: controls de color per blobs (segons sol·licitud) -->
-            <div style="margin-top:12px">
-                <label>Fons (inici degradat)</label>
-                <input type="color" id="bgColor" value="#fafafa">
-            </div>
-
-            <div style="margin-top:14px">
-                <label>Tipus de font</label>
-                <select id="fontSel">
-                    <option value="Montserrat">Montserrat</option>
-                    <option value="Inter">Inter</option>
-                    <option value="Roboto Slab">Roboto Slab</option>
-                    <option value="system">System</option>
-                </select>
-            </div>
-
-            <div style="margin-top:18px;display:flex;gap:10px">
-                <button id="saveStyle" class="btn">Aplica configuracions</button>
-            </div>
-
-            <hr style="margin:18px 0">
-            <div>
-                <strong>Accions</strong>
-                <div style="margin-top:10px;display:flex;gap:8px">
-                    <button id="clearHistory" class="btn">Neteja historial</button>
-                </div>
-            </div>
-        </aside>
-    </div>
-
-    <script src="script.js"></script>
+    <main>
+        <h1>EstudiPro</h1>
+        <h2 id="catala-h2">⚠️ Avís important:</h2>
+        <p id="catala-msg">Estem treballant en la versió 3 d'EstudiPro amb millores i noves funcionalitats. Mentrestant, pots continuar utilitzant la <a href="v2/index.html">versió 2</a>, que segueix plenament operativa. Gràcies per la teva paciència i confiança!</p>
+        <h2 id="english-h2">⚠️ Important:</h2>
+        <p id="english-msg">We are working on EstudiPro version 3 with improvements and new features. In the meantime, you can continue using the <a href="v2/index.html">2nd version</a>, which remains fully operational. Thank you for your patience and trust!</p>
+    </main>
+    <br><br><br>
+    <footer>
+        <a href="v2/index.html">Web in maintenance. Acces to version 2.</a>
 </body>
 </html>
