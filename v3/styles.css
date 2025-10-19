@@ -46,6 +46,15 @@ body {
 }
 
 /* == Left: controls + timer area == */
+#notification {
+    background-color: #ffffaa;
+    text-decoration: dotted;
+    font-style: italic;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+
 .left {
     display: flex;
     flex-direction: column;
