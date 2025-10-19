@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ajuda | EstudiPro</title>
+    <link rel="icon" type="image/x-icon" href="/media/estudipro_logo_neutre.ico">
+
+
+    <!-- Fonts (Google Fonts) -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&family=Inter:wght@300;400;600&family=Roboto+Slab:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <!-- Libs -->
+    <script src="https://unpkg.com/dayjs@1.11.9/dayjs.min.js"></script>
+    <script src="https://unpkg.com/dayjs@1.11.9/plugin/relativeTime.js"></script>
+    <script>dayjs.extend(dayjs_plugin_relativeTime)</script>
+    <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+
+    <!-- Estils separats -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body id="helpRoot">
+    <div class="left">
+    <main class="helpBody">
+        <div class="title">
+            <h1>EstudiPro</h1>
+            <p class="sub">Temporitzador d'estudi minimalista i molt senzill d'utilitzar</p>
+            <br><br>
+            <h2>Ajuda d'EstudiPro</h2>
+            <br>
+        </div>
+        <div class="helpArticles">
+            <div id="helpArticles--comConfigurar">
+                <h3>Com configurar EstudiPro per primer cop</h3>
+                <p>EsudiPro és molt fàcil de configurar. Si mai abans no has accedit a EstudiPro, ara t'ensenyem com configurar el seu estil:</p>
+                <ol>
+                    <li>A la pantalla principal, accedeix al botó de configuració.</li>
+                    <li>A l'apartat de fons, hi ha dos selectors de color: el primer és per a seleccionar l'inici del degradat i el segon el final d'aquest mateix. Selecciona els color que més t'agradin o deixa'ls com estàn per defecte (<code>#FAFAFA</code>).</li>
+                    <li>Desplega l'apartat de fonts, i selecciona la que prefereixis. La que ve per defecte és Montserrat, ja que és una font agradable a la vista i fàcil de llegir, cosa que va molt bé per a aquests casos.</li>
+                    <li>Ara ja pots desar les configuracions i cada vegada que entris a EstudiPro veuràs aquestes configuracions d'estil.</li>
+                </ol>
+            </div>
+            <br>
+            <div id="helpArticles--utilitzar">
+                <h3>Com utilitzar EstudiPro?</h3>
+                <p>Per a començar a utilitzar EstudiPro, escriu a l'input que pots veure el que estaràs fent durant el temps que traballaràs. Selecciona també un dels temps predeterminats que t'oferim o tria tu mateix el temps amb el selector de números. Fes clic a iniciar i ja pots començar a treballar.</p>
+                <br>
+                <p>Quan s'acabi el temps, el comtador començarà a comptar amb un + al davant, indicant el temps que portes fent de més del que t'havies proposat. El temps que surt a l'historial que pots veure a la dreta o a sota del temporitzador és el totat del temps. Pots descarregar aquest historial fent clic a "Exporta CSV".</p>
+            </div>
+            <br>
+            <div id="helpArticles--tornarInici">
+                <h3>Com torno a l'inici?</h3>
+                <p>Si el que vols és tornar a la pàgina inicial d'EstudiPro (on hi ha el cronòmetre, l'historial i la configuració) l'únic que has de fer és clicar al títol del web.</p>
+            </div>
+            <br>
+            <div id="helpArticles--errorsMobil">
+                <h3>Què he de fer si trobo algun error d'adaptació de la pantalla?</h3>
+                <p>En cas què trobis algun error d'adaptació de la pantalla a pantalles més petites, com per exemple que alguna part no surt o no es veu com s'hauria de veure, el que has de fer és enviar-nos un correu a <a href="mailto:arnautm-dev@proton.me">arnautm-dev@proton.me</a>. En aquest correu, inclou-nos una breu descripció del problema, algunes captures de pantalla o fotografies del problema i les teves dades de contacte. Ho intentarem solucionar el més abans possible, i llavors et contactarem per informar-te de que l'error ja està solucionat.</p>
+            </div>
+            <br>
+            <div id="helpArticles--botoError">
+                <h3>El botó no fa res quan hi faig clic</h3>
+                <p>Si algun botó no funciona dins la nostra plataforma, hi ha dues possibilitats: un error intern o del dispositiu o navegador de l'usuari. Abans de res, prova a refrescar la pàgina o reiniciar el teu dispositiu. Això a vegades fa que els botons ja funcionin. Si no ho fan, envia'ns un correu electrònic (<a href="mailto:arnautm-dev@proton.me">arnautm-dev@proton.me</a>) informant-nos del problema. Nosaltres mirarem si és un error nostre o és de l'usuari.</p>
+            </div>
+        </div>
+    </main>
+    </div>
+    <div class="right">
+    <aside class="helpContents">
+        <ul>
+            <li><a href="#helpArticles--comConfigurar">Com configurar EstudiPro?</a></li>
+            <li><a href="#helpArticles--utilitzar">Com utilitzar EstudiPro?</a></li>
+            <li><a href="#helpArticles--tornarInici">Com torno a l'inici?</a></li>
+            <li><a href="#helpArticles--errorsMobil">Errors resolució</a></li>
+            <li><a href="#helpArticles--botoError">El botó no fa res</a></li>
+        </ul>
+    </aside>
+    </div>
+</body>
+</html>
