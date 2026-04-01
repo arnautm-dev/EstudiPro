@@ -1,6 +1,8 @@
 // ========== UTIL / ESTAT GLOBAL ===========
 
 const app = document.getElementById('app');
+const header = document.querySelector('header');
+const headerHoverZone = document.getElementById('header-hover-zone');
 const overlay = document.getElementById('overlay');
 const overlayTimer = document.getElementById('overlayTimer');
 const timerDisplay = document.getElementById('timerDisplay');
@@ -223,6 +225,7 @@ function startSession(methodText, durationSec) {
     timerState.overtime = false;
     timerState.visibilityLost = false;
 
+    header.classList.remove('show');
     app.classList.add('app-active');
     overlay.classList.add('active');
     startBtn.style.display = 'none';
@@ -338,3 +341,18 @@ gsap.to('.blob--a', { duration: 10, x: 40, y: 20, repeat: -1, yoyo: true, ease: 
 gsap.to('.blob--b', { duration: 12, x: -40, y: -20, repeat: -1, yoyo: true, ease: 'sine.inOut' });
 
 timerDisplay.textContent = '00:00';
+
+// Header hover logic (works on all pages)
+const showHeader = () => {
+    if (!timerState || !timerState.running) {
+        header.classList.add('show');
+    }
+};
+const hideHeader = () => {
+    header.classList.remove('show');
+};
+
+headerHoverZone.addEventListener('mouseenter', showHeader);
+headerHoverZone.addEventListener('mouseleave', hideHeader);
+header.addEventListener('mouseenter', showHeader);
+header.addEventListener('mouseleave', hideHeader);
