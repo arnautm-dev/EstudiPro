@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="ca">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Comunitat - EstudiPro</title>
+    <link rel="icon" type="image/x-icon" href="/media/estudipro_logo_neutre.ico">
+
+    <!-- Fonts (Google Fonts) -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&family=Inter:wght@300;400;600&family=Roboto+Slab:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <!-- Libs -->
+    <script src="https://unpkg.com/dayjs@1.11.9/dayjs.min.js"></script>
+    <script src="https://unpkg.com/dayjs@1.11.9/plugin/relativeTime.js"></script>
+    <script>dayjs.extend(dayjs_plugin_relativeTime)</script>
+
+    <!-- Estils -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="comunitat-styles.css">
+</head>
+<body>
+    <div id="app" class="container">
+        <div class="comunitat-header">
+            <div class="comunitat-header-content">
+                <div>
+                    <a href="index.html" class="back-link">← Torna a EstudiPro</a>
+                    <h1 class="comunitat-title">Comunitat</h1>
+                    <p class="comunitat-subtitle">Un fòrum on compartir preguntes i respostes amb altres estudiants</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="comunitat-main">
+            <aside class="comunitat-sidebar">
+                <div class="card">
+                    <h3>Noves Preguntes</h3>
+                    <button id="newQuestionBtn" class="btn btn-primary">+ Fer una pregunta</button>
+                </div>
+
+                <div class="card">
+                    <h3>Filtradors</h3>
+                    <div style="margin-bottom: 12px;">
+                        <label for="searchInput" style="display: block; margin-bottom: 6px; font-size: 0.9rem; font-weight: 600;">Cercar</label>
+                        <input 
+                            id="searchInput" 
+                            type="text" 
+                            placeholder="Busca preguntes..." 
+                            class="filter-input"
+                            aria-label="Cercar preguntes">
+                    </div>
+
+                    <div style="margin-bottom: 12px;">
+                        <label for="categoryFilter" style="display: block; margin-bottom: 6px; font-size: 0.9rem; font-weight: 600;">Categoria</label>
+                        <select id="categoryFilter" class="filter-select" aria-label="Filtra per categoria">
+                            <option value="">Totes les categories</option>
+                            <option value="Matemàtiques">Matemàtiques</option>
+                            <option value="Programació">Programació</option>
+                            <option value="Idiomes">Idiomes</option>
+                            <option value="Ciència">Ciència</option>
+                            <option value="Altres">Altres</option>
+                        </select>
+                    </div>
+
+                    <div style="margin-bottom: 12px;">
+                        <label for="statusFilter" style="display: block; margin-bottom: 6px; font-size: 0.9rem; font-weight: 600;">Estat</label>
+                        <select id="statusFilter" class="filter-select" aria-label="Filtra per estat">
+                            <option value="">Totes</option>
+                            <option value="unsolved">Sense resoldre</option>
+                            <option value="solved">Resolta</option>
+                        </select>
+                    </div>
+
+                    <div style="margin-bottom: 12px;">
+                        <label for="sortFilter" style="display: block; margin-bottom: 6px; font-size: 0.9rem; font-weight: 600;">Ordenar per</label>
+                        <select id="sortFilter" class="filter-select" aria-label="Ordena preguntes">
+                            <option value="recent">Més recents</option>
+                            <option value="oldest">Més antigues</option>
+                            <option value="mostAnswers">Més respostes</option>
+                        </select>
+                    </div>
+
+                    <button id="clearFiltersBtn" class="btn btn-secondary">Neteja filtradors</button>
+                </div>
+
+                <div class="card info-card">
+                    <h4>💡 Consells</h4>
+                    <ul style="font-size: 0.9rem; line-height: 1.6; color: #555;">
+                        <li>Sé específic en les teves preguntes</li>
+                        <li>Revisa si la pregunta ja existeix</li>
+                        <li>Marca la resposta útil com a resolta</li>
+                        <li>Sé respectuós amb altres usuaris</li>
+                    </ul>
+                </div>
+            </aside>
+
+            <main class="comunitat-content">
+                <!-- Modal per nova pregunta -->
+                <div id="newQuestionModal" class="modal hidden">
+                    <div class="modal-overlay"></div>
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Fer una pregunta nova</h2>
+                            <button id="closeModal" class="modal-close" aria-label="Tanca el modal">✕</button>
+                        </div>
+                        <form id="newQuestionForm" class="form">
+                            <div class="form-group">
+                                <label for="questionTitle">Títol de la pregunta *</label>
+                                <input 
+                                    id="questionTitle" 
+                                    type="text" 
+                                    placeholder="Ex: Com es resol una integral?" 
+                                    required
+                                    maxlength="200"
+                                    aria-label="Títol de la pregunta">
+                                <span class="char-count"><span id="titleCount">0</span>/200</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="questionContent">Descripció / Contingut *</label>
+                                <textarea 
+                                    id="questionContent" 
+                                    placeholder="Explica la teva pregunta amb detall..." 
+                                    required
+                                    maxlength="2000"
+                                    rows="6"
+                                    aria-label="Descripció de la pregunta"></textarea>
+                                <span class="char-count"><span id="contentCount">0</span>/2000</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="questionCategory">Categoria *</label>
+                                <select id="questionCategory" required aria-label="Categoria de la pregunta">
+                                    <option value="">Selecciona una categoria</option>
+                                    <option value="Matemàtiques">Matemàtiques</option>
+                                    <option value="Programació">Programació</option>
+                                    <option value="Idiomes">Idiomes</option>
+                                    <option value="Ciència">Ciència</option>
+                                    <option value="Altres">Altres</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="questionAuthor">Nom (opcional)</label>
+                                <input 
+                                    id="questionAuthor" 
+                                    type="text" 
+                                    placeholder="El teu nom (deixa en blanc per a \"Anònim\")" 
+                                    maxlength="50"
+                                    aria-label="Nom de l'autor">
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Publicar pregunta</button>
+                                <button type="button" id="cancelQuestion" class="btn btn-secondary">Cancelar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Llistat de preguntes -->
+                <div id="questionsContainer" class="questions-container" role="main">
+                    <div class="loading-state">
+                        <div class="spinner"></div>
+                        <p>Carregant preguntes...</p>
+                    </div>
+                </div>
+
+                <!-- Modal per afegir resposta -->
+                <div id="answerModal" class="modal hidden">
+                    <div class="modal-overlay"></div>
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Afegir una resposta</h2>
+                            <button id="closeAnswerModal" class="modal-close" aria-label="Tanca el modal">✕</button>
+                        </div>
+                        <form id="answerForm" class="form">
+                            <div class="form-group">
+                                <label for="answerContent">La teva resposta *</label>
+                                <textarea 
+                                    id="answerContent" 
+                                    placeholder="Escriu la teva resposta..." 
+                                    required
+                                    maxlength="2000"
+                                    rows="6"
+                                    aria-label="Contingut de la resposta"></textarea>
+                                <span class="char-count"><span id="answerCount">0</span>/2000</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="answerAuthor">Nom (opcional)</label>
+                                <input 
+                                    id="answerAuthor" 
+                                    type="text" 
+                                    placeholder="El teu nom (deixa en blanc per a \"Anònim\")" 
+                                    maxlength="50"
+                                    aria-label="Nom de l'autor">
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Publicar resposta</button>
+                                <button type="button" id="cancelAnswer" class="btn btn-secondary">Cancelar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="comunitat-script.js"></script>
+</body>
+</html>
