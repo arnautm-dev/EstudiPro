@@ -96,6 +96,7 @@
         </div>
     </div>
 
+    <script src="comunitat-script.js"></script>
     <script>
         const LS_QUESTIONS_KEY = 'comunitat_questions_v1';
         const LS_ANSWERS_KEY = 'comunitat_answers_v1';
@@ -134,27 +135,28 @@
             }
         }
 
-        function testQuestionsCRUD() {
+        async function resetBackend() {
+            await fetch('/api/reset', { method: 'POST' });
+        }
+
+        async function testQuestionsCRUD() {
             const result = document.getElementById('test3-result');
             try {
-                // Netejar
+                await resetBackend();
                 localStorage.removeItem(LS_QUESTIONS_KEY);
                 
-                // Create
-                const q1 = createQuestion('Test Question', 'Test content', 'Test Author', 'Programació');
-                const questions = loadQuestions();
+                const q1 = await createQuestion('Test Question', 'Test content', 'Test Author', 'Programació');
+                const questions = await loadQuestions();
                 
                 if (questions.length !== 1) throw new Error('Question not created');
                 if (questions[0].title !== 'Test Question') throw new Error('Question title incorrect');
                 
-                // Update Status
-                updateQuestionStatus(q1.id, 'solved');
-                const updated = loadQuestions()[0];
+                await updateQuestionStatus(q1.id, 'solved');
+                const updated = (await loadQuestions())[0];
                 if (updated.status !== 'solved') throw new Error('Status not updated');
                 
-                // Delete
-                deleteQuestion(q1.id);
-                const after = loadQuestions();
+                await deleteQuestion(q1.id);
+                const after = await loadQuestions();
                 if (after.length !== 0) throw new Error('Question not deleted');
                 
                 result.innerHTML = '<span class="status-ok">✓ CRUD de preguntes funciona correctament</span>';
@@ -163,30 +165,26 @@
             }
         }
 
-        function testAnswersCRUD() {
+        async function testAnswersCRUD() {
             const result = document.getElementById('test4-result');
             try {
-                // Clean
+                await resetBackend();
                 localStorage.removeItem(LS_QUESTIONS_KEY);
                 localStorage.removeItem(LS_ANSWERS_KEY);
                 
-                // Create question first
-                const q = createQuestion('Test Q', 'Content', '', 'Altres');
+                const q = await createQuestion('Test Q', 'Content', '', 'Altres');
                 
-                // Create answer
-                const a1 = createAnswer(q.id, 'Answer content', 'Answerer');
-                const answers = loadAnswers();
+                const a1 = await createAnswer(q.id, 'Answer content', 'Answerer');
+                const answers = await loadAnswers();
                 
                 if (answers.length !== 1) throw new Error('Answer not created');
                 if (answers[0].content !== 'Answer content') throw new Error('Answer content incorrect');
                 
-                // Get answers for question
-                const qAnswers = getAnswersForQuestion(q.id);
+                const qAnswers = await getAnswersForQuestion(q.id);
                 if (qAnswers.length !== 1) throw new Error('getAnswersForQuestion failed');
                 
-                // Delete answer
-                deleteAnswer(a1.id);
-                const after = loadAnswers();
+                await deleteAnswer(a1.id);
+                const after = await loadAnswers();
                 if (after.length !== 0) throw new Error('Answer not deleted');
                 
                 result.innerHTML = '<span class="status-ok">✓ CRUD de respostes funciona correctament</span>';
@@ -195,26 +193,23 @@
             }
         }
 
-        function testFiltering() {
+        async function testFiltering() {
             const result = document.getElementById('test5-result');
             try {
-                // Clean
+                await resetBackend();
                 localStorage.removeItem(LS_QUESTIONS_KEY);
                 localStorage.removeItem(LS_ANSWERS_KEY);
                 
-                // Create test data
-                createQuestion('Math Question', 'How to solve?', 'Alice', 'Matemàtiques');
-                createQuestion('Code Question', 'How to code?', 'Bob', 'Programació');
-                createQuestion('Language Question', 'How to learn?', 'Charlie', 'Idiomes');
+                await createQuestion('Math Question', 'How to solve?', 'Alice', 'Matemàtiques');
+                await createQuestion('Code Question', 'How to code?', 'Bob', 'Programació');
+                await createQuestion('Language Question', 'How to learn?', 'Charlie', 'Idiomes');
                 
-                const all = loadQuestions();
+                const all = await loadQuestions();
                 if (all.length !== 3) throw new Error('Not all questions created');
                 
-                // Test category filter would work (verify data exists)
                 const math = all.filter(q => q.category === 'Matemàtiques');
                 if (math.length !== 1) throw new Error('Filter by category failed');
                 
-                // Test search would work (verify contains)
                 const search = all.filter(q => q.title.includes('Code'));
                 if (search.length !== 1) throw new Error('Search filter failed');
                 
