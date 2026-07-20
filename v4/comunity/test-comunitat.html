@@ -4,6 +4,70 @@
     <meta charset="UTF-8">
     <title>Test Comunitat - EstudiPro</title>
     <style>
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Montserrat, sans-serif;
+}
+
+/* OVERLAY QUE TAPA TOTA LA PANTALLA */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.caixa-avis {
+    background-color: #1e1e2f;
+    color: #fff;
+    padding: 2rem 3rem;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 500px;
+}
+
+.caixa-avis h1 {
+    color: #ffcc00;
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+}
+
+.caixa-avis p {
+    margin-bottom: 1.5rem;
+    color: #ccc;
+}
+
+#tancar-avis {
+    background-color: #ffcc00;
+    color: #1e1e2f;
+    border: none;
+    padding: 0.7rem 1.5rem;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+#tancar-avis:hover {
+    background-color: #e6b800;
+}
+
+/* CONTINGUT REAL (es veu darrere de l'overlay) */
+.contingut-real {
+    padding: 2rem;
+}
+
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
@@ -49,7 +113,15 @@
     </style>
 </head>
 <body>
-    <div class="test-container">
+    <div id="avis-construccio" class="overlay">
+        <div class="caixa-avis">
+            <h1>🚧Ups... ens has enxampat construint!🚧</h1>
+            <p>Aquesta pàgina encara està en desenvolupament. Alguns continguts poden no funcionar correctament.</p>
+            <button id="tancar-avis" style="font-family: Montserrat, system-ui;">Entesos, continuar</button>
+        </div>
+    </div>
+
+    <div class="test-container contingut-real">
         <h1>🧪 Test de Comunitat - EstudiPro</h1>
         
         <div class="test-item">
@@ -247,5 +319,13 @@
             console.log('Page loaded - Tests ready');
         });
     </script>
+    <script>
+    const avis = document.getElementById('avis-construccio');
+    const boto = document.getElementById('tancar-avis');
+
+    boto.addEventListener('click', () => {
+        avis.style.display = 'none';
+    });
+  </script>
 </body>
 </html>

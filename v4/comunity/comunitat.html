@@ -19,7 +19,14 @@
     <link rel="stylesheet" href="comunitat-styles.css">
 </head>
 <body>
-    <div id="app" class="container">
+    <div id="avis-construccio" class="overlay">
+        <div class="caixa-avis">
+            <h1>🚧Ups... ens has enxampat construint!🚧</h1>
+            <p>Aquesta pàgina encara està en desenvolupament. Alguns continguts poden no funcionar correctament.</p>
+            <button id="tancar-avis" style="font-family: Montserrat, system-ui;">Entesos, continuar</button>
+        </div>
+    </div>
+    <div id="app" class="container contingut-real">
         <div class="comunitat-header">
             <div class="comunitat-header-content">
                 <div>
@@ -208,5 +215,13 @@
     </div>
 
     <script src="comunitat-script.js"></script>
+    <script>
+    const avis = document.getElementById('avis-construccio');
+    const boto = document.getElementById('tancar-avis');
+
+    boto.addEventListener('click', () => {
+        avis.style.display = 'none';
+    });
+    </script>
 </body>
 </html>
