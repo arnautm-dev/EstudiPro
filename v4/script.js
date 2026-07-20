@@ -2,7 +2,7 @@
 
 const app = document.getElementById('app');
 const header = document.querySelector('header');
-const headerHoverZone = document.getElementById('header-hover-zone');
+const headerHoverZone = document.getElementById('header-hover-zone1');
 const overlay = document.getElementById('overlay');
 const overlayTimer = document.getElementById('overlayTimer');
 const timerDisplay = document.getElementById('timerDisplay');
