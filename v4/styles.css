@@ -63,7 +63,7 @@ header a {
 
 header a:hover { text-decoration: underline; }
 
-#header-hover-zone {
+.header-hover-zone {
     position: fixed;
     top: 0;
     left: 0;
