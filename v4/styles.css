@@ -33,21 +33,28 @@ body {
     padding: 32px;
 }
 
-/* == HEADER == */
-header {
+/* == HEADERS == */
+header{
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     background: rgba(255, 255, 255, 0.9);
     padding: 50px 20px;
-    transform: translateY(-95%);
-    transition: transform 0.3s ease;
     z-index: 1000;
     box-shadow: 0 0 25px rgba(0,0,0,0.3);
 }
 
-header.show { transform: translateY(0); }
+header.home-header {
+    transform: translateY(-95%);
+    transition: transform 0.3s ease;
+}
+
+header.secondary-header{
+    padding: 30px 20px;
+}
+
+header.home-header.show { transform: translateY(0); }
 
 header nav {
     display: flex;
@@ -71,6 +78,8 @@ header a:hover { text-decoration: underline; }
     height: 40px;   
     z-index: 999;
 }
+
+
 
 /* == LAYOUT PRINCIPAL == */
 .container {
