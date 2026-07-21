@@ -79,7 +79,33 @@ header a:hover { text-decoration: underline; }
     z-index: 999;
 }
 
+.submenu {
+    position: absolute;
+    top: 80px;
+    left: 55%;
+    background: #333;
+    list-style: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity .25s, transform .25s, visibility .25s;
+    padding: 15px 15px;
+    border-radius: 3px;
+}
 
+.dropdown:hover .submenu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.menu, .submenu, a, li {
+    list-style: none;
+}
+
+.submenu-item{
+    color: #fff;
+}
 
 /* == LAYOUT PRINCIPAL == */
 .container {

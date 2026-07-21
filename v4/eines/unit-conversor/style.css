@@ -1,0 +1,279 @@
+:root {
+    --background: #f4f6fb;
+    --surface: #ffffff;
+    --border: #d9dde8;
+    --text: #222;
+    --secondary: #666;
+    --primary: #3b82f6;
+    --primary-hover: #2563eb;
+    --shadow: 0 10px 30px rgba(0,0,0,.08);
+    --radius: 14px;
+    --transition: .2s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
+}
+
+body {
+    background: var(--background);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+
+main {
+    width: min(1100px, 92%);
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    padding-bottom: 40px;
+    margin-top: 100px;
+}
+
+section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 24px;
+}
+
+section h2 {
+    margin-bottom: 18px;
+    font-size: 1.25rem;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.converter {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 20px;
+    align-items: center;
+}
+
+.panel {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.panel h2 {
+    margin-bottom: 2px;
+}
+
+.middle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+button,
+select,
+input {
+    font-size: 1rem;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    transition: var(--transition);
+}
+
+input,
+select {
+    width: 100%;
+    padding: 12px 14px;
+    background: white;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+button {
+    cursor: pointer;
+    padding: 12px 18px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    font-weight: 600;
+}
+
+button:hover {
+    background: var(--primary-hover);
+}
+
+#swapButton {
+    min-width: 120px;
+}
+
+.result-section div,
+.equality-section div {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    word-break: break-word;
+}
+
+.history,
+.favorites {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+#history,
+#favoriteUnits {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.history-item,
+.favorite-item {
+    background: #eef4ff;
+    color: var(--text);
+    border: 1px solid #cfdcff;
+    padding: 10px 14px;
+    border-radius: 10px;
+}
+
+.history-item:hover,
+.favorite-item:hover {
+    background: #dceaff;
+}
+
+.category-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    appearance: textfield;
+}
+
+::placeholder {
+    color: #999;
+}
+
+@media (max-width:900px) {
+    .converter {
+        grid-template-columns: 1fr;
+    }
+
+    .middle {
+        justify-content: stretch;
+    }
+
+    #swapButton {
+        width: 100%;
+    }
+}
+
+@media (max-width:600px) {
+    header {
+        padding: 30px 16px 20px;
+    }
+
+    header h1 {
+        font-size: 2rem;
+    }
+
+    section {
+        padding: 18px;
+    }
+
+    main {
+        width: 95%;
+        gap: 20px;
+    }
+
+    input,
+    select,
+    button {
+        font-size: .95rem;
+    }
+}
+
+/* == HEADERS == */
+header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 50px 20px;
+    z-index: 1000;
+    box-shadow: 0 0 25px rgba(0,0,0,0.3);
+    font-family: Montserrat,  Elms Sans, system-ui;
+}
+
+header.secondary-header{
+    padding: 30px 20px;
+}
+
+header nav {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+header a {
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+header a:hover { text-decoration: underline; }
+
+#header-hover-zone1 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40px;   
+    z-index: 999;
+}
+
+.submenu {
+    position: absolute;
+    top: 80px;
+    left: 55%;
+    background: #333;
+    list-style: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity .25s, transform .25s, visibility .25s;
+    padding: 15px 15px;
+    border-radius: 3px;
+}
+
+.dropdown:hover .submenu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.menu, .submenu, a, li {
+    list-style: none;
+}
+
+.submenu-item{
+    color: #fff;
+}
