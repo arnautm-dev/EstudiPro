@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit Converter</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="secondary-header">
+        <nav>
+            <a href="../../index.html">Home</a>
+            <a href="../../about.html">About Us</a>
+            <a href="../../help.html">Help</a>
+            <li class="dropdown">
+                <a><b>Tools</b></a>
+                <ul class="submenu">
+                    <li><a class="submenu-item" href="eines/color-picker/" target="_blank" rel="noopener noreferrer">Color picker</a></li>
+                    <li><a class="submenu-item" href="https://dashboard-inici.netlify.app/" target="_blank" rel="noopener noreferrer">Dashboard</a></li>
+                    <li><a class="submenu-item" href="eines/unit-conversor/" target="_blank" rel="noopener noreferrer"><b>Unit converter</b></a></li>
+                    <li><a class="submenu-item" href="https://convertio.co/" target="_blank" rel="noopener noreferrer">File converter</a></li>
+                </ul>
+            </li>
+        </nav>
+    </header>
+
+<main>
+
+    <section class="category-section">
+
+        <label for="category">Category</label>
+
+        <select id="category"></select>
+
+    </section>
+
+
+    <section class="converter">
+
+        <div class="panel">
+
+            <h2>From</h2>
+
+            <!--<input
+                type="text"
+                id="searchFrom"
+                placeholder="Search unit..."
+            >-->
+
+            <select id="fromUnit"></select>
+
+            <input
+                type="number"
+                id="fromValue"
+                value="1"
+                step="any"
+            >
+
+        </div>
+
+
+        <div class="middle">
+
+            <button id="swapButton">
+                Swap
+            </button>
+
+        </div>
+
+
+        <div class="panel">
+
+            <h2>To</h2>
+
+            <!--<input
+                type="text"
+                id="searchTo"
+                placeholder="Search unit..."
+            >-->
+
+            <select id="toUnit"></select>
+
+            <input
+                type="number"
+                id="toValue"
+                value="1000"
+                step="any"
+            >
+
+        </div>
+
+    </section>
+
+
+    <section class="result-section">
+
+        <h2>Conversion</h2>
+
+        <div class="conversion" id="conversionResult">
+            —
+        </div>
+
+    </section>
+
+
+    <section class="equality-section">
+
+        <h2>Equality</h2>
+
+        <div id="equality1">
+            —
+        </div>
+
+        <div id="equality2">
+            —
+        </div>
+
+    </section>
+
+
+    <!--<section class="favorites">
+
+        <h2>Favorite Units</h2>
+
+        <div id="favoriteUnits">
+
+            <p>No favorite units yet.</p>
+
+        </div>
+
+    </section>-->
+
+
+    <section class="history">
+
+        <h2>Recent Conversions</h2>
+
+        <div id="history">
+
+            <p>No recent conversions.</p>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<template id="historyItem">
+
+    <button class="history-item">
+
+        <span class="history-text"></span>
+
+    </button>
+
+</template>
+
+
+<template id="favoriteItem">
+
+    <button class="favorite-item">
+
+        <span></span>
+
+    </button>
+
+</template>
+
+
+<script src="units.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>

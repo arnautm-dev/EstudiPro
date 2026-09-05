@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Help | EstudiPro</title>
+    <link rel="icon" type="image/x-icon" href="/media/estudipro_logo_neutre.ico">
+
+
+    <!-- Fonts (Google Fonts) -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&family=Inter:wght@300;400;600&family=Roboto+Slab:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <!-- Libs -->
+    <script src="https://unpkg.com/dayjs@1.11.9/dayjs.min.js"></script>
+    <script src="https://unpkg.com/dayjs@1.11.9/plugin/relativeTime.js"></script>
+    <script>dayjs.extend(dayjs_plugin_relativeTime)</script>
+    <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+
+    <!-- Estils separats -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body id="helpRoot">
+    <header class="secondary-header">
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="about.html">About Us</a>
+            <a href="help.html"><b>Help</b></a>
+            <li class="dropdown">
+                <a>Tools</a>
+                <ul class="submenu">
+                    <li><a class="submenu-item" href="eines/color-picker/" target="_blank" rel="noopener noreferrer">Color picker</a></li>
+                    <li><a class="submenu-item" href="https://dashboard-inici.netlify.app/" target="_blank" rel="noopener noreferrer">Dashboard</a></li>
+                    <li><a class="submenu-item" href="eines/unit-conversor/" target="_blank" rel="noopener noreferrer">Unit converter</a></li>
+                    <li><a class="submenu-item" href="https://convertio.co/" target="_blank" rel="noopener noreferrer">File converter</a></li>
+                </ul>
+            </li>
+        </nav>
+    </header>
+    <div class="left">
+        <br><br><br><br>
+        <div class="helpArticles">
+            <div id="helpArticles--comConfigurar">
+                <h3>How to configure EstudiPro for the first time</h3>
+                <p>EsudiPro is very easy to configure. If you have never accessed EstudiPro before, now we will teach you how to configure its style:</p>
+                <ol>
+                    <li>On the main screen, access the configuration button.</li>
+                    <li>In the background section, there are two color selectors: the first is to select the start of the gradient and the second the end of it. Select the colors you like the most or leave them as they are by default (<code>#FAFAFA</code>).</li>
+                    <li>Expand the font section, and select the one you prefer. The default is Montserrat, since it is a font that is pleasant to the eye and easy to read, which is very good for these cases.</li>
+                    <li>Now you can save the settings and every time you enter EstudiPro you will see these style settings.</li>
+                </ol>
+            </div>
+            <br>
+            <div id="helpArticles--utilitzar">
+                <h3>How to use EstudiPro?</h3>
+                <p>To start using EstudiPro, type in the input that you can see what you will be doing during the time you will be working. Also select one of the preset times that we offer or choose the time yourself with the number selector. Click start and you can start working.</p>
+                <br>
+                <p>When the time is up, the counter will start counting with a + in front, indicating the time you have been doing more than you had planned. The time that appears in the history that you can see to the right or below the timer is the total time. You can download this history by clicking "Export CSV".</p>
+            </div>
+            <br>
+            <div id="helpArticles--tornarInici">
+                <h3>How do I get back to the start?</h3>
+                <p>If you want to return to the EstudiPro home page (where the stopwatch, history and settings are) all you have to do is click on the website title.</p>
+            </div>
+            <br>
+            <div id="helpArticles--errorsMobil">
+                <h3>What should I do if I find a screen adaptation error?</h3>
+                <p>If you find a screen adaptation error on smaller screens, such as some part not appearing or not being seen as it should be, what you have to do is send us an email to <a href="mailto:arnautm-dev@proton.me">arnautm-dev@proton.me</a>. In this email, include a short description of the problem, some screenshots or photos of the problem and your contact details. We will try to solve it as soon as possible, and then we will contact you to inform you that the error has been resolved.</p>
+            </div>
+            <br>
+            <div id="helpArticles--botoError">
+                <h3>The button does nothing when I click it</h3>
+                <p>If a button does not work within our platform, there are two possibilities: an internal error or an error in the user's device or browser. First of all, try refreshing the page or restarting your device. This sometimes makes the buttons work. If they do not, send us an email (<a href="mailto:arnautm-dev@proton.me">arnautm-dev@proton.me</a>) informing us of the problem. We will see if it is our error or the user's.</p>
+            </div>
+        </div>
+    </main>
+    </div>
+</body>
+</html>
