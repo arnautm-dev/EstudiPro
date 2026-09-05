@@ -1,6 +1,8 @@
 // ========== UTIL / ESTAT GLOBAL ===========
 
 const app = document.getElementById('app');
+const header = document.querySelector('header');
+const headerHoverZone = document.getElementById('header-hover-zone1');
 const overlay = document.getElementById('overlay');
 const overlayTimer = document.getElementById('overlayTimer');
 const timerDisplay = document.getElementById('timerDisplay');
@@ -115,6 +117,26 @@ function applyStyleFromStorage() {
             document.body.style.fontFamily = "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial";
         } else if (s.font === 'Roboto Slab') {
             document.body.style.fontFamily = "'Roboto Slab', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial";
+        } else if (s.font === 'Poppins') {
+            document.body.style.fontFamily = "'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial";
+        } else if (s.font === 'Lato') {
+            document.body.style.fontFamily = "'Lato', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial";
+        } else if (s.font === 'Nunito') {
+            document.body.style.fontFamily = "'Nunito', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial";
+        } else if (s.font === 'Merriweather') {
+            document.body.style.fontFamily = "'Merriweather', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial";
+        } else if (s.font === 'Playfair Display') {
+            document.body.style.fontFamily = "'Playfair Display', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial";
+        } else if (s.font === 'Open Sans') {
+            document.body.style.fontFamily = "'Open Sans', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial";
+        } else if (s.font === 'Ubuntu') {
+            document.body.style.fontFamily = "'Ubuntu', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial";
+        } else if (s.font === 'Fira Sans') {
+            document.body.style.fontFamily = "'Fira Sans', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial";
+        } else if (s.font === 'Source Sans Pro') {
+            document.body.style.fontFamily = "'Source Sans Pro', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial";
+        } else if (s.font === 'Cabin') {
+            document.body.style.fontFamily = "'Cabin', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial";
         } else {
             document.body.style.fontFamily = "system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial";
         }
@@ -203,6 +225,7 @@ function startSession(methodText, durationSec) {
     timerState.overtime = false;
     timerState.visibilityLost = false;
 
+    header.classList.remove('show');
     app.classList.add('app-active');
     overlay.classList.add('active');
     startBtn.style.display = 'none';
@@ -318,3 +341,18 @@ gsap.to('.blob--a', { duration: 10, x: 40, y: 20, repeat: -1, yoyo: true, ease: 
 gsap.to('.blob--b', { duration: 12, x: -40, y: -20, repeat: -1, yoyo: true, ease: 'sine.inOut' });
 
 timerDisplay.textContent = '00:00';
+
+// Header hover logic (works on all pages)
+const showHeader = () => {
+    if (!timerState || !timerState.running) {
+        header.classList.add('show');
+    }
+};
+const hideHeader = () => {
+    header.classList.remove('show');
+};
+
+headerHoverZone.addEventListener('mouseenter', showHeader);
+headerHoverZone.addEventListener('mouseleave', hideHeader);
+header.addEventListener('mouseenter', showHeader);
+header.addEventListener('mouseleave', hideHeader);
