@@ -1,0 +1,4 @@
+[[redirects]]
+  from = "/ca"
+  to = "index.html"
+  status = 301
