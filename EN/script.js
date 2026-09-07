@@ -64,7 +64,7 @@ function renderHistory() {
     const data = loadHistory().slice().reverse();
     historyList.innerHTML = '';
     if (!data.length) {
-        historyList.innerHTML = '<div class="muted">Sense registres</div>';
+        historyList.innerHTML = '<div class="muted">Without sessions</div>';
         return;
     }
     data.forEach(item => {

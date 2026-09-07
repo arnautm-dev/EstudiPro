@@ -2,3 +2,13 @@
   from = "/ca"
   to = "index.html"
   status = 301
+
+[[redirects]]
+  from = "/cat"
+  to = "index.html"
+  status = 301
+
+[[redirects]]
+  from = "/eng"
+  to = "/en"
+  status = 301
